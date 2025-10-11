@@ -1,0 +1,87 @@
+:root{
+  --green-1: #0ea46a;
+  --green-2: #27ae60;
+  --light-blue: #8fd3ff;
+  --white: #ffffff;
+  --bg-dark: #062b1f;
+  --card-shadow: rgba(2,36,23,0.35);
+  --muted: #7a8b8a;
+}
+
+/* Reset & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background: linear-gradient(180deg, rgba(14,164,106,0.09), rgba(143,211,255,0.03));
+  color:#0b2b22; -webkit-font-smoothing:antialiased;
+}
+
+/* Topbar */
+.topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 14px; gap:8px;
+  background: linear-gradient(90deg,var(--green-1),var(--light-blue));
+  color:var(--white);
+}
+.brand{display:flex;align-items:center;gap:8px}
+.logo{
+  width:36px;height:36px;border-radius:8px;background:var(--white);color:var(--green-1);
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+}
+.title{font-weight:700;font-size:1rem}
+.menu-btn, .download-btn{background:transparent;border:none;color:inherit;font-weight:600}
+
+/* Main container */
+.container{padding:12px;max-width:980px;margin:0 auto}
+
+/* Card style used by layers */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+  border-radius:12px; padding:14px; margin-bottom:12px;
+  box-shadow: 0 6px 18px var(--card-shadow);
+}
+
+/* Balances */
+.balances .balance-row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.bal{flex:1;text-align:center;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(11,122,76,0.06), rgba(11,122,76,0.02))}
+.num{font-size:1.25rem;font-weight:700;color:var(--green-2)}
+.label{font-size:.85rem;color:var(--muted)}
+.actions-row{display:flex;gap:8px;margin-top:10px;justify-content:center}
+.small-btn{padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--green-1),var(--green-2));color:white;font-weight:700}
+
+/* Promo */
+.promo{display:flex;gap:12px;align-items:center}
+.promo-left{flex:2}
+.promo-left h2{margin:0 0 6px 0;color:var(--green-2)}
+.promo-left p{margin:0;color:#2f5f51}
+.promo-right{flex:1;text-align:right}
+.promo-illustration{width:64px;height:64px;background:linear-gradient(180deg,var(--green-2),var(--light-blue));border-radius:10px}
+
+/* Referral */
+.referral h3{margin:0 0 8px 0}
+.ref-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ref-row input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-size:.95rem}
+.copy-btn{padding:9px 10px;border-radius:8px;border:none;background:var(--green-2);color:white;font-weight:700}
+.hint{color:var(--muted);font-size:.9rem;margin-top:6px}
+.share-buttons{display:flex;gap:8px;margin-top:8px}
+.share{flex:1;padding:10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--light-blue),var(--green-1));color:#033; font-weight:700}
+
+/* Features grid */
+.features{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.feature{display:flex;gap:8px;align-items:center;padding:10px;border-radius:8px;background:linear-gradient(180deg, rgba(12,96,62,0.03), rgba(11,122,76,0.02))}
+.f-icon{width:46px;height:46;border-radius:8px;background:linear-gradient(90deg,var(--green-1),var(--light-blue));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+.f-title{font-weight:700}
+
+/* Menu list */
+.menu-list ul{list-style:none;padding:0;margin:0}
+.menu-list li{padding:12px 8px;border-bottom:1px solid rgba(0,0,0,0.04)}
+
+/* Footer */
+.footer{padding:12px;text-align:center;color:var(--muted);font-size:.9rem}
+
+/* Responsive */
+@media(min-width:900px){
+  .container{max-width:900px}
+  .promo-right{text-align:right}
+}
