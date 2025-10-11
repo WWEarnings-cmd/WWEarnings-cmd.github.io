@@ -1,47 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WWEarnings-cmd</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #00c853, #ffffff, #81d4fa);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      animation: glow 3s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.4); }
+      100% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); }
+    }
+
+    .panel {
+      width: 120px;
+      height: 300px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+    }
+
+    .form-box {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px 35px;
+      text-align: center;
+      width: 260px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    h2 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00c853;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00e676;
+    }
+
+    .link {
+      margin-top: 10px;
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .link:hover {
+      color: #00e5ff;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>WWEarnings-cmd</h1>
-    <p class="tagline">Earn and grow your points daily — fast and easy!</p>
-  </header>
+  <div class="container">
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
 
-  <main>
-    <section class="welcome">
-      <h2>Welcome Back!</h2>
-      <p>Manage your earnings, track your points, and invite others to earn more.</p>
-      <div class="buttons">
-        <a href="register.html" class="btn">Register</a>
-        <a href="login.html" class="btn secondary">Login</a>
-      </div>
-    </section>
-
-    <section id="account" class="hidden">
-      <h3>Your Account</h3>
-      <p>Balance: <span id="accountBalance">0 pts</span></p>
-      <p>Today’s Earnings: <span id="todayEarnings">0 pts</span></p>
-      <p>Promo Income: <span id="promoIncome">0 pts</span></p>
-    </section>
-  </main>
-
-  <footer>
-    <p>© <span id="year"></span> WWEarnings-cmd</p>
-  </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    let userPoints = localStorage.getItem("userPoints");
-    if (!userPoints) {
-      userPoints = 200;
-      localStorage.setItem("userPoints", userPoints);
-    }
-    document.getElementById("accountBalance").textContent = userPoints + " pts";
-  </script>
+  <div class="form-box">
+    <h2>Register</h2>
+    <input type="text" placeholder="Phone Number" />
+    <input type="password" placeholder="Password" />
+    <button>Register</button>
+    <a href="#" class="link">Already have an account? Login</a>
+  </div>
 </body>
 </html>
