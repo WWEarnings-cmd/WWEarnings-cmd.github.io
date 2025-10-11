@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,91 +8,72 @@
   <style>
     body {
       margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
       font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0dd37a, #ffffff, #4fc3f7);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #333;
+      justify-content: flex-start;
+      padding-top: 40px;
     }
-
-    header {
-      background: linear-gradient(90deg, #81c784, #64b5f6);
-      color: white;
-      width: 100%;
-      padding: 15px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .dashboard {
-      margin-top: 40px;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      padding: 30px;
+    .card {
+      background: white;
       width: 85%;
-      max-width: 400px;
+      max-width: 380px;
+      border-radius: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
       text-align: center;
+      padding: 25px;
+      margin-bottom: 20px;
     }
-
     h2 {
-      color: #1b5e20;
+      color: #0d47a1;
+      margin-bottom: 15px;
     }
-
     .balance {
-      margin: 20px 0;
-      font-size: 22px;
-      font-weight: bold;
-      color: #1565c0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #0bb56a;
+      margin-bottom: 30px;
     }
-
     .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
+      display: grid;
+      gap: 12px;
     }
-
     button {
-      padding: 10px 15px;
+      padding: 12px;
+      background: #0dd37a;
       border: none;
       border-radius: 8px;
-      background-color: #42a5f5;
       color: white;
-      font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.2s ease;
     }
-
     button:hover {
-      background-color: #1e88e5;
+      background: #0bb56a;
     }
-
-    @media (max-width: 500px) {
-      .dashboard {
-        width: 90%;
-      }
+    .logout {
+      margin-top: 25px;
+      background: #ef5350;
+    }
+    .logout:hover {
+      background: #e53935;
     }
   </style>
 </head>
 <body>
-  <header>WWEarnings-cmd Dashboard</header>
-
-  <div class="dashboard">
-    <h2>Welcome!</h2>
-    <div class="balance">Balance: <span id="points">200</span> Points</div>
-
+  <div class="card">
+    <h2>Dashboard</h2>
+    <div class="balance">Balance: 200 Points</div>
     <div class="buttons">
-      <button>Home</button>
       <button>Earn Points</button>
       <button>Withdraw</button>
+      <button>Referrals</button>
       <button>Profile</button>
-      <button onclick="window.location.href='login.html'">Logout</button>
+      <button class="logout" onclick="window.location.href='login.html'">Logout</button>
     </div>
   </div>
 </body>
-</html>
+</html>   
