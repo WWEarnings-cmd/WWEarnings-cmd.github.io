@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,75 +8,72 @@
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(135deg, #00c853, #ffffff, #81d4fa);
+      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: "Poppins", sans-serif;
       overflow: hidden;
+      color: #333;
     }
 
     .container {
       display: flex;
       gap: 15px;
       padding: 20px;
-      animation: glow 3s infinite alternate;
-    }
-
-    @keyframes glow {
-      0% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.4); }
-      100% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); }
     }
 
     .panel {
       width: 120px;
       height: 300px;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-      transition: all 0.3s ease;
+      background: linear-gradient(160deg, #c8e6c9, #bbdefb);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .panel:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
 
     .form-box {
       position: absolute;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 25px 35px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px 40px;
       text-align: center;
-      width: 260px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      width: 270px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
     h2 {
-      color: #fff;
+      color: #1b5e20;
       margin-bottom: 20px;
     }
 
     input {
       width: 100%;
       padding: 10px;
-      margin: 8px 0;
-      border: none;
+      margin: 10px 0;
+      border: 1px solid #ccc;
       outline: none;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.8);
       font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #64b5f6;
+      box-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
     }
 
     button {
       width: 100%;
       padding: 10px;
-      margin-top: 12px;
+      margin-top: 15px;
       border: none;
       border-radius: 8px;
-      background-color: #00c853;
+      background-color: #42a5f5;
       color: white;
       font-weight: bold;
       cursor: pointer;
@@ -84,20 +81,20 @@
     }
 
     button:hover {
-      background-color: #00e676;
+      background-color: #1e88e5;
     }
 
     .link {
-      margin-top: 10px;
+      margin-top: 12px;
       display: block;
-      color: #fff;
+      color: #1e88e5;
       text-decoration: none;
       font-size: 14px;
       transition: 0.3s;
     }
 
     .link:hover {
-      color: #00e5ff;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -118,4 +115,4 @@
     <a href="#" class="link">Already have an account? Login</a>
   </div>
 </body>
-</html>
+</html>    
