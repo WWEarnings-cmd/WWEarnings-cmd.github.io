@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - WWEarnings-cmd</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, #81c784, #64b5f6);
+      color: white;
+      width: 100%;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard {
+      margin-top: 40px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 85%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1b5e20;
+    }
+
+    .balance {
+      margin: 20px 0;
+      font-size: 22px;
+      font-weight: bold;
+      color: #1565c0;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #42a5f5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #1e88e5;
+    }
+
+    @media (max-width: 500px) {
+      .dashboard {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>WWEarnings-cmd Dashboard</header>
+
+  <div class="dashboard">
+    <h2>Welcome!</h2>
+    <div class="balance">Balance: <span id="points">200</span> Points</div>
+
+    <div class="buttons">
+      <button>Home</button>
+      <button>Earn Points</button>
+      <button>Withdraw</button>
+      <button>Profile</button>
+      <button onclick="window.location.href='login.html'">Logout</button>
+    </div>
+  </div>
+</body>
+</html>
