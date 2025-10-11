@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register - WWEarnings-cmd</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Register</h1>
+  </header>
+
+  <main class="form-area">
+    <form id="registerForm">
+      <label>Phone Number</label>
+      <input type="tel" id="regPhone" placeholder="Enter phone number" required />
+
+      <label>Password</label>
+      <input type="password" id="regPass" placeholder="Enter password" required />
+
+      <button type="submit" class="btn">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> WWEarnings-cmd</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("regPhone").value;
+      const pass = document.getElementById("regPass").value;
+      localStorage.setItem("userPhone", phone);
+      localStorage.setItem("userPass", pass);
+      localStorage.setItem("userPoints", 200);
+      alert("Registration successful!");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
