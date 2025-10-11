@@ -3,140 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WWEarnigs-cmd</title>
+  <title>WWEarnings-cmd</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="top-left">
-      <button class="menu-btn" aria-label="menu">☰</button>
-      <div class="brand">
-        <div class="logo">W</div>
-        <div class="title">WWEarnigs-cmd</div>
-      </div>
-    </div>
-    <div class="top-right">
-      <button class="download-btn">Download APP ⤓</button>
-    </div>
+  <header>
+    <h1>WWEarnings-cmd</h1>
+    <p class="tagline">Earn and grow your points daily — fast and easy!</p>
   </header>
 
-  <main class="container">
-    <!-- Layer 1: Balances -->
-    <section class="card balances">
-      <div class="balance-row">
-        <div class="bal">
-          <div class="num" id="accountBalance">0.00</div>
-          <div class="label">Account balance</div>
-        </div>
-        <div class="bal">
-          <div class="num" id="todayEarnings">0.00</div>
-          <div class="label">Today's earnings</div>
-        </div>
-        <div class="bal">
-          <div class="num" id="promoIncome">0.00</div>
-          <div class="label">Today's promotion income</div>
-        </div>
-      </div>
-
-      <div class="actions-row">
-        <button class="small-btn">🎡 Lucky wheel</button>
-        <button class="small-btn">📅 Sign in calendar</button>
+  <main>
+    <section class="welcome">
+      <h2>Welcome Back!</h2>
+      <p>Manage your earnings, track your points, and invite others to earn more.</p>
+      <div class="buttons">
+        <a href="register.html" class="btn">Register</a>
+        <a href="login.html" class="btn secondary">Login</a>
       </div>
     </section>
 
-    <!-- Layer 2: Promo banner -->
-    <section class="card promo">
-      <div class="promo-left">
-        <h2>JOIN NOW</h2>
-        <p>Monthly income from single account range — start earning today.</p>
-      </div>
-      <div class="promo-right">
-        <img alt="promo" src="" class="promo-illustration" />
-      </div>
-    </section>
-
-    <!-- Layer 3: Referral / Links -->
-    <section class="card referral">
-      <h3>Suggested Links</h3>
-      <div class="ref-row">
-        <input id="refLink" readonly value="https://example.com/ref=ABC123" />
-        <button class="copy-btn" data-copy="refLink">Copy</button>
-      </div>
-      <div class="ref-row">
-        <input id="refCode" readonly value="ABC123" />
-        <button class="copy-btn" data-copy="refCode">Copy</button>
-      </div>
-      <p class="hint">Invite users to earn points. Share via WhatsApp, Telegram or Facebook.</p>
-      <div class="share-buttons">
-        <button class="share">WhatsApp</button>
-        <button class="share">Telegram</button>
-        <button class="share">Facebook</button>
-      </div>
-    </section>
-
-    <!-- Layer 4: Features grid -->
-    <section class="card features">
-      <div class="feature">
-        <div class="f-icon">📘</div>
-        <div class="f-title">Tutorials</div>
-      </div>
-      <div class="feature">
-        <div class="f-icon">💬</div>
-        <div class="f-title">Telegram Groups</div>
-      </div>
-      <div class="feature">
-        <div class="f-icon">🔗</div>
-        <div class="f-title">Platform Guidelines</div>
-      </div>
-      <div class="feature">
-        <div class="f-icon">🏦</div>
-        <div class="f-title">Withdrawal</div>
-      </div>
-    </section>
-
-    <!-- Layer 5: Options list -->
-    <section class="card menu-list">
-      <ul>
-        <li>Account withdrawal</li>
-        <li>Income details</li>
-        <li>Withdrawal order</li>
-        <li>Change password</li>
-        <li>Language settings</li>
-      </ul>
+    <section id="account" class="hidden">
+      <h3>Your Account</h3>
+      <p>Balance: <span id="accountBalance">0 pts</span></p>
+      <p>Today’s Earnings: <span id="todayEarnings">0 pts</span></p>
+      <p>Promo Income: <span id="promoIncome">0 pts</span></p>
     </section>
   </main>
 
-  <footer class="footer">
-    <small>© <span id="year"></span> WWEarnigs-cmd</small>
+  <footer>
+    <p>© <span id="year"></span> WWEarnings-cmd</p>
   </footer>
 
   <script>
-    // set year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Copy-to-clipboard handlers
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id = btn.getAttribute('data-copy');
-        const input = document.getElementById(id);
-        if (!input) return;
-        try {
-          await navigator.clipboard.writeText(input.value);
-          btn.textContent = 'Copied';
-          setTimeout(()=> btn.textContent = 'Copy', 1200);
-        } catch (e) {
-          input.select();
-          document.execCommand('copy');
-          btn.textContent = 'Copied';
-          setTimeout(()=> btn.textContent = 'Copy', 1200);
-        }
-      });
-    });
-
-    // demo placeholders (replace with real data later)
-    document.getElementById('accountBalance').textContent = '0.00';
-    document.getElementById('todayEarnings').textContent = '0.00';
-    document.getElementById('promoIncome').textContent = '0.00';
+    document.getElementById("year").textContent = new Date().getFullYear();
+    let userPoints = localStorage.getItem("userPoints");
+    if (!userPoints) {
+      userPoints = 200;
+      localStorage.setItem("userPoints", userPoints);
+    }
+    document.getElementById("accountBalance").textContent = userPoints + " pts";
   </script>
 </body>
 </html>
