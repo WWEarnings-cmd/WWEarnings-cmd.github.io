@@ -1,51 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - WWEarnings-cmd</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .panel {
+      width: 120px;
+      height: 300px;
+      border-radius: 20px;
+      background: linear-gradient(160deg, #c8e6c9, #bbdefb);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-box {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px 40px;
+      text-align: center;
+      width: 270px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      color: #1b5e20;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      outline: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #64b5f6;
+      box-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #42a5f5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #1e88e5;
+    }
+
+    .link {
+      margin-top: 12px;
+      display: block;
+      color: #1e88e5;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Login</h1>
-  </header>
+  <div class="container">
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
 
-  <main class="form-area">
-    <form id="loginForm">
-      <label>Phone Number</label>
-      <input type="tel" id="logPhone" placeholder="Enter phone number" required />
-
-      <label>Password</label>
-      <input type="password" id="logPass" placeholder="Enter password" required />
-
-      <button type="submit" class="btn secondary">Login</button>
-    </form>
-
-    <p>New user? <a href="register.html">Register here</a></p>
-  </main>
-
-  <footer>
-    <p>© <span id="year"></span> WWEarnings-cmd</p>
-  </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const phone = document.getElementById("logPhone").value;
-      const pass = document.getElementById("logPass").value;
-      const storedPhone = localStorage.getItem("userPhone");
-      const storedPass = localStorage.getItem("userPass");
-
-      if (phone === storedPhone && pass === storedPass) {
-        alert("Login successful!");
-        window.location.href = "index.html";
-      } else {
-        alert("Invalid credentials. Try again.");
-      }
-    });
-  </script>
+  <div class="form-box">
+    <h2>Login</h2>
+    <input type="text" placeholder="Phone Number" />
+    <input type="password" placeholder="Password" />
+    <button>Login</button>
+    <a href="index.html" class="link">Don't have an account? Register</a>
+  </div>
 </body>
 </html>
