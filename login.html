@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - WWEarnings-cmd</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Login</h1>
+  </header>
+
+  <main class="form-area">
+    <form id="loginForm">
+      <label>Phone Number</label>
+      <input type="tel" id="logPhone" placeholder="Enter phone number" required />
+
+      <label>Password</label>
+      <input type="password" id="logPass" placeholder="Enter password" required />
+
+      <button type="submit" class="btn secondary">Login</button>
+    </form>
+
+    <p>New user? <a href="register.html">Register here</a></p>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> WWEarnings-cmd</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("logPhone").value;
+      const pass = document.getElementById("logPass").value;
+      const storedPhone = localStorage.getItem("userPhone");
+      const storedPass = localStorage.getItem("userPass");
+
+      if (phone === storedPhone && pass === storedPass) {
+        alert("Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid credentials. Try again.");
+      }
+    });
+  </script>
+</body>
+</html>
