@@ -1,47 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Register - WWEarnings-cmd</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | WWEarnings-cmd</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d4e1d, #00bfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-box {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      background: #0078d7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+    }
+    button:hover {
+      background: #005fa3;
+    }
+    .msg {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Register</h1>
-  </header>
-
-  <main class="form-area">
-    <form id="registerForm">
-      <label>Phone Number</label>
-      <input type="tel" id="regPhone" placeholder="Enter phone number" required />
-
-      <label>Password</label>
-      <input type="password" id="regPass" placeholder="Enter password" required />
-
-      <button type="submit" class="btn">Register</button>
-    </form>
-
-    <p>Already have an account? <a href="login.html">Login</a></p>
-  </main>
-
-  <footer>
-    <p>© <span id="year"></span> WWEarnings-cmd</p>
-  </footer>
+  <div class="form-box">
+    <h2>Register</h2>
+    <input type="text" id="name" placeholder="Full Name" required><br>
+    <input type="tel" id="phone" placeholder="Phone Number" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="registerUser()">Register</button>
+    <div class="msg" id="msg"></div>
+  </div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
 
-    document.getElementById("registerForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const phone = document.getElementById("regPhone").value;
-      const pass = document.getElementById("regPass").value;
-      localStorage.setItem("userPhone", phone);
-      localStorage.setItem("userPass", pass);
-      localStorage.setItem("userPoints", 200);
-      alert("Registration successful!");
-      window.location.href = "login.html";
-    });
+    async function registerUser() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!name || !phone || !password) {
+        msg.textContent = "All fields are required.";
+        msg.style.color = "red";
+        return;
+      }
+
+      msg.textContent = "Registering...";
+      msg.style.color = "black";
+
+      try {
+        const body = {
+          user: {
+            name,
+            phone,
+            password
+          }
+        };
+
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        msg.textContent = "✅ Registered successfully!";
+        msg.style.color = "green";
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+        msg.textContent = "❌ Registration failed.";
+        msg.style.color = "red";
+      }
+    }
   </script>
 </body>
 </html>
