@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register | WWEarnings-cmd</title>
+  <title>Login | WWEarnings-cmd</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0d4e1d, #00bfff);
+      background: linear-gradient(135deg, #005fa3, #00bfff);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -41,64 +41,72 @@
       font-size: 15px;
     }
     button:hover {
-      background: #005fa3;
+      background: #004b8a;
     }
     .msg {
       margin-top: 10px;
       font-size: 14px;
     }
+    .bottom-links {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .bottom-links a {
+      color: #0078d7;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <div class="form-box">
-    <h2>Register</h2>
-    <input type="text" id="name" placeholder="Full Name" required><br>
+    <h2>Login</h2>
     <input type="tel" id="phone" placeholder="Phone Number" required><br>
     <input type="password" id="password" placeholder="Password" required><br>
-    <button onclick="registerUser()">Register</button>
+    <button onclick="login()">Login</button>
     <div class="msg" id="msg"></div>
+
+    <div class="bottom-links">
+      <p>Don’t have an account? <a href="register.html">Register here</a></p>
+    </div>
   </div>
 
   <script>
     const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
 
-    async function registerUser() {
-      const name = document.getElementById("name").value.trim();
+    async function login() {
       const phone = document.getElementById("phone").value.trim();
       const password = document.getElementById("password").value.trim();
       const msg = document.getElementById("msg");
 
-      if (!name || !phone || !password) {
-        msg.textContent = "All fields are required.";
+      if (!phone || !password) {
+        msg.textContent = "Please enter phone and password.";
         msg.style.color = "red";
         return;
       }
 
-      msg.textContent = "Registering...";
+      msg.textContent = "Checking...";
       msg.style.color = "black";
 
       try {
-        const body = {
-          user: {
-            name,
-            phone,
-            password
-          }
-        };
-
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        });
-
+        const res = await fetch(url);
         const data = await res.json();
-        msg.textContent = "✅ Registered successfully!";
-        msg.style.color = "green";
-        console.log(data);
+        const users = data.users;
+
+        const found = users.find(u => u.phone == phone && u.password == password);
+
+        if (found) {
+          msg.textContent = "✅ Login successful! Redirecting...";
+          msg.style.color = "green";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        } else {
+          msg.textContent = "❌ Invalid phone or password.";
+          msg.style.color = "red";
+        }
       } catch (err) {
         console.error(err);
-        msg.textContent = "❌ Registration failed.";
+        msg.textContent = "Error connecting to server.";
         msg.style.color = "red";
       }
     }
