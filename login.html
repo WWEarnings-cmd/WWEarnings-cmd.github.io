@@ -1,74 +1,103 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - WWEarnings-cmd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | WWEarnings-cmd</title>
   <style>
     body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #0dd37a, #e3f2fd, #4fc3f7);
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #005fa3, #00bfff);
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .container {
+    .form-box {
       background: white;
+      border-radius: 20px;
       padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 320px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      width: 300px;
       text-align: center;
-    }
-    h2 {
-      color: #0d47a1;
-      margin-bottom: 20px;
     }
     input {
       width: 90%;
+      margin: 10px 0;
       padding: 10px;
-      margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
     }
     button {
-      width: 95%;
-      padding: 10px;
-      margin-top: 10px;
-      background: #0dd37a;
+      background: #0078d7;
       color: white;
       border: none;
+      padding: 10px 20px;
       border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
+      width: 100%;
+      font-size: 15px;
     }
     button:hover {
-      background: #0bb56a;
+      background: #004b8a;
     }
-    a {
-      display: block;
-      margin-top: 15px;
+    .msg {
+      margin-top: 10px;
       font-size: 14px;
-      color: #0d47a1;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="form-box">
     <h2>Login</h2>
-    <form onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
-      <input type="text" placeholder="Phone Number" required /><br />
-      <input type="password" placeholder="Password" required /><br />
-      <button type="submit">Login</button>
-    </form>
-    <a href="register.html">Don’t have an account? Register</a>
+    <input type="tel" id="phone" placeholder="Phone Number" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="login()">Login</button>
+    <div class="msg" id="msg"></div>
   </div>
+
+  <script>
+    const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
+
+    async function login() {
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!phone || !password) {
+        msg.textContent = "Please enter phone and password.";
+        msg.style.color = "red";
+        return;
+      }
+
+      msg.textContent = "Checking...";
+      msg.style.color = "black";
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const users = data.users;
+
+        const found = users.find(u => u.phone == phone && u.password == password);
+
+        if (found) {
+          msg.textContent = "✅ Login successful! Redirecting...";
+          msg.style.color = "green";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        } else {
+          msg.textContent = "❌ Invalid phone or password.";
+          msg.style.color = "red";
+        }
+      } catch (err) {
+        console.error(err);
+        msg.textContent = "Error connecting to server.";
+        msg.style.color = "red";
+      }
+    }
+  </script>
 </body>
 </html>
