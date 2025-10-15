@@ -1,113 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | WWEarnings-cmd</title>
+  <title>Login</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #005fa3, #00bfff);
+      background: linear-gradient(135deg, #2a5298, #1e3c72);
+      color: white;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      margin: 0;
     }
-    .form-box {
-      background: white;
-      border-radius: 20px;
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
       padding: 30px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      border-radius: 10px;
       width: 300px;
-      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
     input {
-      width: 90%;
-      margin: 10px 0;
+      width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
     }
     button {
-      background: #0078d7;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
       width: 100%;
-      font-size: 15px;
+      padding: 10px;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
     button:hover {
-      background: #004b8a;
+      background-color: #45a049;
     }
-    .msg {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .bottom-links {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    .bottom-links a {
-      color: #0078d7;
+    a {
+      color: #ddd;
       text-decoration: none;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="form-box">
+  <div class="form-container">
     <h2>Login</h2>
-    <input type="tel" id="phone" placeholder="Phone Number" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
+    <input type="text" id="phone" placeholder="Phone number" required>
+    <input type="password" id="password" placeholder="Password" required>
     <button onclick="login()">Login</button>
-    <div class="msg" id="msg"></div>
-
-    <div class="bottom-links">
-      <p>Don’t have an account? <a href="register.html">Register here</a></p>
-    </div>
+    <p style="text-align:center;">Don't have an account? <a href="register.html">Register</a></p>
   </div>
 
   <script>
-    const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
-
     async function login() {
       const phone = document.getElementById("phone").value.trim();
       const password = document.getElementById("password").value.trim();
-      const msg = document.getElementById("msg");
 
       if (!phone || !password) {
-        msg.textContent = "Please enter phone and password.";
-        msg.style.color = "red";
+        alert("Please enter both phone and password");
         return;
       }
 
-      msg.textContent = "Checking...";
-      msg.style.color = "black";
+      const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
 
       try {
         const res = await fetch(url);
         const data = await res.json();
         const users = data.users;
 
-        const found = users.find(u => u.phone == phone && u.password == password);
+        // Find user by phone and password
+        const user = users.find(u => u.phone === phone && u.password === password);
 
-        if (found) {
-          msg.textContent = "✅ Login successful! Redirecting...";
-          msg.style.color = "green";
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 1500);
+        if (user) {
+          alert("✅ Login successful!");
+          localStorage.setItem("loggedInUser", JSON.stringify(user));
+          window.location.href = "dashboard.html"; // redirect to your dashboard
         } else {
-          msg.textContent = "❌ Invalid phone or password.";
-          msg.style.color = "red";
+          alert("❌ Invalid phone or password!");
         }
-      } catch (err) {
-        console.error(err);
-        msg.textContent = "Error connecting to server.";
-        msg.style.color = "red";
+
+      } catch (error) {
+        alert("Error: " + error.message);
       }
     }
   </script>
