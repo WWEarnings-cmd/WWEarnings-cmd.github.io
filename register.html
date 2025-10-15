@@ -70,16 +70,20 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            usersDb3: { phone, password, balance: 200 }
+            UsersDB3: {  // 👈 matches your sheet name exactly
+              phone,
+              password,
+              balance: 200
+            }
           })
         });
+        const text = await res.text();
         if (!res.ok) {
-          const t = await res.text();
-          msg.textContent = "Error: " + t;
+          msg.textContent = "Error: " + text;
           return;
         }
         msg.style.color = "#aefcae";
-        msg.textContent = "Registered success! Redirecting...";
+        msg.textContent = "Registered successfully! Redirecting...";
         setTimeout(() => location.href = "login.html", 1000);
       } catch (err) {
         msg.textContent = "Network error: " + err.message;
