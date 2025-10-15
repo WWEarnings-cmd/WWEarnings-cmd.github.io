@@ -19,7 +19,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       width: 350px;
     }
     input {
@@ -54,30 +54,35 @@
   </div>
 
   <script>
-    const SHEETY_URL = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/usersDb2/usersDb2";
+    const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
 
     document.getElementById('registerBtn').addEventListener('click', async () => {
       const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value.trim();
       const msg = document.getElementById('msg');
-      if (!phone || !password) return msg.textContent = "Please fill all fields";
-
+      if (!phone || !password) {
+        msg.textContent = "Please fill both fields";
+        return;
+      }
       msg.textContent = "Registering...";
       try {
         const res = await fetch(SHEETY_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            usersDb2: { phone, password, balance: 200 }
+            usersDb3: { phone, password, balance: 200 }
           })
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+          const t = await res.text();
+          msg.textContent = "Error: " + t;
+          return;
+        }
         msg.style.color = "#aefcae";
-        msg.textContent = "Registered successfully! Redirecting...";
+        msg.textContent = "Registered success! Redirecting...";
         setTimeout(() => location.href = "login.html", 1000);
       } catch (err) {
-        msg.style.color = "#ffcdd2";
-        msg.textContent = "Error: " + err.message;
+        msg.textContent = "Network error: " + err.message;
       }
     });
   </script>
