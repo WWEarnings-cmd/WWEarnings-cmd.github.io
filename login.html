@@ -1,94 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — Debug</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2a5298, #1e3c72);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .form-container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    a {
-      color: #ddd;
-      text-decoration: none;
-      font-size: 14px;
-    }
+    body{font-family:Arial,system-ui;display:flex;align-items:center;justify-content:center;
+      min-height:100vh;margin:0;background:linear-gradient(135deg,#2a5298,#1e3c72);color:#fff}
+    .card{background:rgba(255,255,255,0.06);padding:20px;border-radius:12px;width:340px;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+    input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.9);color:#111}
+    button{width:100%;padding:10px;border-radius:8px;border:0;background:#4caf50;color:white;font-weight:700;cursor:pointer}
+    .debug{margin-top:12px;font-size:13px;color:#ddd;background:rgba(0,0,0,0.15);padding:8px;border-radius:8px}
+    ul{padding-left:18px;margin:8px 0}
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Login</h2>
-    <input type="text" id="phone" placeholder="Phone number" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button onclick="login()">Login</button>
-    <p style="text-align:center;">Don't have an account? <a href="register.html">Register</a></p>
+  <div class="card">
+    <h2 style="margin:0 0 10px 0;color:#fff">Login</h2>
+
+    <input id="phone" placeholder="Phone number (exact)" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="btn">Login</button>
+
+    <div id="msg" style="margin-top:10px;color:#ffcccb"></div>
+
+    <div class="debug" id="debug">
+      <strong>Registered phones (debug):</strong>
+      <div id="phones">loading…</div>
+      <p style="margin:8px 0 0 0;font-size:12px;color:#cfe8ff">If the phone you registered isn’t listed here, registration didn't save correctly.</p>
+    </div>
   </div>
 
-  <script>
-    async function login() {
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value.trim();
+<script>
+const SHEETY_URL = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
 
-      if (!phone || !password) {
-        alert("Please enter both phone and password");
-        return;
-      }
+async function fetchUsers() {
+  try {
+    const r = await fetch(SHEETY_URL);
+    if (!r.ok) throw new Error('Sheety returned ' + r.status);
+    const j = await r.json();
+    // Sheety usually returns an object with a property named after the sheet, e.g. { users: [...] } or { sheet1: [...] }
+    // Find the first array in the response:
+    const arr = Object.values(j).find(v => Array.isArray(v)) || [];
+    console.log('Raw Sheety response:', j);
+    return arr;
+  } catch (err) {
+    console.error('Fetch error:', err);
+    document.getElementById('msg').textContent = 'Error fetching user list: ' + err.message;
+    return [];
+  }
+}
 
-      const url = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
+function normalizePhone(s) {
+  if (!s) return '';
+  return s.toString().replace(/\s+/g,'').replace(/^\+/, '').replace(/^0+/, (m)=>m).trim();
+  // we don't aggressively normalize country codes here — compare exact saved value by default
+}
 
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const users = data.users;
+async function showPhones() {
+  const users = await fetchUsers();
+  const phonesEl = document.getElementById('phones');
+  if (!users.length) {
+    phonesEl.innerHTML = '<em>No users in sheet yet.</em>';
+    return;
+  }
+  // show the phone column values so you can confirm exact strings
+  const list = users.map(u => u.phone !== undefined ? String(u.phone) : JSON.stringify(u)).slice(0,50);
+  phonesEl.innerHTML = '<ul>' + list.map(p => '<li>' + escapeHtml(p) + '</li>').join('') + '</ul>';
+  // also log full objects to console for debugging
+  console.log('Detected user objects (first 20):', users.slice(0,20));
+  return users;
+}
 
-        // Find user by phone and password
-        const user = users.find(u => u.phone === phone && u.password === password);
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-        if (user) {
-          alert("✅ Login successful!");
-          localStorage.setItem("loggedInUser", JSON.stringify(user));
-          window.location.href = "dashboard.html"; // redirect to your dashboard
-        } else {
-          alert("❌ Invalid phone or password!");
-        }
+document.getElementById('btn').addEventListener('click', async () => {
+  const phoneInput = document.getElementById('phone').value.trim();
+  const passInput  = document.getElementById('password').value;
+  const msg = document.getElementById('msg');
+  msg.style.color = '#ffcccb';
+  msg.textContent = 'Checking...';
 
-      } catch (error) {
-        alert("Error: " + error.message);
-      }
-    }
-  </script>
+  const users = await fetchUsers();
+  if (!users.length) {
+    msg.textContent = 'No users found in sheet. Register first.';
+    return;
+  }
+
+  // try to find user by exact phone first
+  let found = users.find(u => String(u.phone) === phoneInput);
+
+  // If exact not found, try a looser match (remove spaces/leading +)
+  if (!found) {
+    const normalizedInput = phoneInput.replace(/\s+/g,'').replace(/^\+/, '');
+    found = users.find(u => {
+      if (!u.phone) return false;
+      const p = String(u.phone).replace(/\s+/g,'').replace(/^\+/, '');
+      return p === normalizedInput;
+    });
+  }
+
+  if (!found) {
+    msg.textContent = 'Phone not found. Check registered phones list below (or re-register).';
+    // keep debug list visible
+    return;
+  }
+
+  // if phone found but sheet column name for password differs, log object for debugging
+  if (!('password' in found)) {
+    console.warn('Found user object but it has no "password" field:', found);
+    msg.textContent = 'User found but stored row has no "password" column. Open console to inspect row.';
+    return;
+  }
+
+  // compare password (exact match)
+  if (String(found.password) === passInput) {
+    msg.style.color = '#b6f7c6';
+    msg.textContent = '✅ Login successful — redirecting to dashboard...';
+    // store minimal session and redirect
+    localStorage.setItem('loggedInUserPhone', String(found.phone));
+    setTimeout(()=> window.location.href = 'dashboard.html', 900);
+  } else {
+    msg.textContent = 'Incorrect password for this phone. Try again.';
+    // helpful debug hint: show length of stored password (not its contents)
+    const len = found.password ? String(found.password).length : 0;
+    const hint = ` (stored password length: ${len})`;
+    msg.textContent += hint;
+    console.log('Stored user row for debugging:', found);
+  }
+});
+
+// show phones when page loads
+showPhones();
+</script>
 </body>
 </html>
