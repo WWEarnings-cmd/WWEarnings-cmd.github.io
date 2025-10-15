@@ -1,66 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Login</title>
-<style>
-  body{font-family:Arial,system-ui;display:flex;align-items:center;justify-content:center;
-    min-height:100vh;margin:0;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff}
-  .card{background:rgba(255,255,255,0.06);padding:20px;border-radius:12px;width:360px;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
-  input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.95);color:#111}
-  button{width:100%;padding:10px;border-radius:8px;border:0;background:#2196f3;color:white;font-weight:700;cursor:pointer}
-  a{color:#cfe8ff;font-size:14px;text-decoration:none}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | WWEarnings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2a5298, #1e3c72);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      width: 350px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    a { color: #b3e5fc; text-decoration: none; }
+    #msg { margin-top: 10px; font-size: 14px; }
+  </style>
 </head>
 <body>
   <div class="card">
-    <h2 style="margin:0 0 10px 0;color:#fff">Login</h2>
-
-    <input id="phone" placeholder="Phone number" />
+    <h2>Login</h2>
+    <input id="phone" type="text" placeholder="Phone number" />
     <input id="password" type="password" placeholder="Password" />
     <button id="loginBtn">Login</button>
-
-    <div id="msg" style="margin-top:10px;color:#ffdede"></div>
-    <p style="margin-top:12px;">Don’t have an account? <a href="register.html">Register here</a></p>
+    <p>No account? <a href="register.html">Register</a></p>
+    <div id="msg"></div>
   </div>
 
-<script>
-const SHEETY_URL = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/users/users";
+  <script>
+    const SHEETY_URL = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/usersDb2/usersDb2";
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const msg = document.getElementById("msg");
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('msg');
+      if (!phone || !password) return msg.textContent = "Enter phone and password";
 
-  if (!phone || !password) {
-    msg.textContent = "Please enter both phone and password.";
-    return;
-  }
+      msg.textContent = "Checking...";
 
-  msg.textContent = "Checking...";
+      try {
+        const res = await fetch(SHEETY_URL);
+        const data = await res.json();
+        const users = data.usersDb2 || [];
+        const user = users.find(u => u.phone === phone && u.password === password);
 
-  try {
-    const res = await fetch(SHEETY_URL);
-    const data = await res.json();
-    const users = data.users || [];
+        if (!user) {
+          msg.style.color = "#ffcdd2";
+          msg.textContent = "Invalid number or password";
+          return;
+        }
 
-    const user = users.find(u => u.phone === phone && u.password === password);
-
-    if (user) {
-      msg.style.color = "#b6f7c6";
-      msg.textContent = "✅ Login successful!";
-      // store session
-      localStorage.setItem("loggedUser", phone);
-      setTimeout(() => (window.location.href = "dashboard.html"), 1000);
-    } else {
-      msg.textContent = "Invalid number or password.";
-    }
-  } catch (err) {
-    console.error(err);
-    msg.textContent = "Network error — try again.";
-  }
-});
-</script>
+        localStorage.setItem("loggedInPhone", phone);
+        msg.style.color = "#aefcae";
+        msg.textContent = "Login successful!";
+        setTimeout(() => location.href = "dashboard.html", 1000);
+      } catch (err) {
+        msg.style.color = "#ffcdd2";
+        msg.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
