@@ -19,7 +19,7 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       width: 350px;
     }
     input {
@@ -54,31 +54,31 @@
   </div>
 
   <script>
-    const SHEETY_URL = "https://api.sheety.co/4a9868f3c5ce48f976e575a769b00f1c/usersDb2/usersDb2";
+    const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
 
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value.trim();
       const msg = document.getElementById('msg');
-      if (!phone || !password) return msg.textContent = "Enter phone and password";
-
+      if (!phone || !password) {
+        msg.textContent = "Enter phone & password";
+        return;
+      }
       msg.textContent = "Checking...";
-
       try {
         const res = await fetch(SHEETY_URL);
+        if (!res.ok) throw new Error('Sheety returned ' + res.status);
         const data = await res.json();
-        const users = data.usersDb2 || [];
+        const users = data.usersDb3 || [];
         const user = users.find(u => u.phone === phone && u.password === password);
-
         if (!user) {
           msg.style.color = "#ffcdd2";
           msg.textContent = "Invalid number or password";
           return;
         }
-
         localStorage.setItem("loggedInPhone", phone);
         msg.style.color = "#aefcae";
-        msg.textContent = "Login successful!";
+        msg.textContent = "Login success!";
         setTimeout(() => location.href = "dashboard.html", 1000);
       } catch (err) {
         msg.style.color = "#ffcdd2";
