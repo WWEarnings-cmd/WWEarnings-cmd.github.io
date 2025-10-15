@@ -42,7 +42,7 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
 
   try {
     const body = {
-      users: { phone: phone, password: password }
+      user: { phone: phone, password: password } // <-- FIXED HERE
     };
 
     const response = await fetch(SHEETY_URL, {
