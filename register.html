@@ -70,7 +70,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            UsersDB3: {  // 👈 matches your sheet name exactly
+            usersdb3: {  // ✅ lowercase version (this fixes the Bad Request)
               phone,
               password,
               balance: 200
