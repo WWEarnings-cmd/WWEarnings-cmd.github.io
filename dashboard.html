@@ -1,79 +1,73 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - WWEarnings-cmd</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #0dd37a, #ffffff, #4fc3f7);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 40px;
-    }
-    .card {
-      background: white;
-      width: 85%;
-      max-width: 380px;
-      border-radius: 16px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      text-align: center;
-      padding: 25px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      color: #0d47a1;
-      margin-bottom: 15px;
-    }
-    .balance {
-      font-size: 24px;
-      font-weight: 600;
-      color: #0bb56a;
-      margin-bottom: 30px;
-    }
-    .buttons {
-      display: grid;
-      gap: 12px;
-    }
-    button {
-      padding: 12px;
-      background: #0dd37a;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-    button:hover {
-      background: #0bb56a;
-    }
-    .logout {
-      margin-top: 25px;
-      background: #ef5350;
-    }
-    .logout:hover {
-      background: #e53935;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#00bfa5,#2196f3,#e3f2fd);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    background: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 30px;
+    width: 340px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  h2 { color:#0d47a1; }
+  p { color:#333; margin:10px 0; }
+  .points {
+    font-size: 2.4rem;
+    color:#009688;
+    font-weight: bold;
+  }
+  button {
+    margin-top: 18px;
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#1976d2;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  button:hover { background:#0d47a1; }
+</style>
 </head>
 <body>
-  <div class="card">
-    <h2>Dashboard</h2>
-    <div class="balance">Balance: 200 Points</div>
-    <div class="buttons">
-      <button>Earn Points</button>
-      <button>Withdraw</button>
-      <button>Referrals</button>
-      <button>Profile</button>
-      <button class="logout" onclick="window.location.href='login.html'">Logout</button>
-    </div>
+  <div class="container">
+    <h2 id="welcome">Welcome</h2>
+    <p>Your current balance:</p>
+    <div class="points" id="points">200 pts</div>
+    <button id="logout">Logout</button>
   </div>
+
+<script>
+  // Check session
+  const phone = localStorage.getItem("loggedUser");
+  if (!phone) {
+    window.location.href = "login.html";
+  } else {
+    document.getElementById("welcome").textContent = "Welcome, " + phone;
+  }
+
+  // Default balance (can later come from API)
+  const points = 200;
+  document.getElementById("points").textContent = points + " pts";
+
+  // Logout clears session
+  document.getElementById("logout").addEventListener("click", () => {
+    localStorage.removeItem("loggedUser");
+    window.location.href = "login.html";
+  });
+</script>
 </body>
-</html>   
+</html>
