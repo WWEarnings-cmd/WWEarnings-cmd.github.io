@@ -1,42 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WWEarnings Login</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 0.7rem;
+      margin: 0.6rem 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+    a {
+      display: block;
+      margin-top: 15px;
+      color: #1976d2;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-<h2>Login</h2>
-<input id="phone" placeholder="Phone"><br>
-<input id="password" placeholder="Password" type="password"><br>
-<button onclick="loginUser()">Login</button>
-<p id="msg"></p>
+  <div class="container">
+    <h2>Login to WWEarnings</h2>
+    <input type="text" id="phone" placeholder="Phone Number" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+    <a href="register.html">Don't have an account? Register</a>
+  </div>
 
-<script>
-const API_URL = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
+  <script>
+    async function login() {
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!phone || !password) {
+        alert("Please fill in both fields.");
+        return;
+      }
 
-async function loginUser() {
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const msg = document.getElementById("msg");
+      try {
+        const res = await fetch("https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4");
+        const data = await res.json();
+        const users = data.usersDb4 || [];
+        const foundUser = users.find(
+          u => u.phone === phone && u.password === password
+        );
 
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-
-    const users = data.usersDb4 || [];
-    const found = users.find(u => u.phone === phone && u.password === password);
-
-    if (found) {
-      msg.innerText = "✅ Login successful! Welcome " + (found.telegram || "");
-      // Here you can redirect:
-      // window.location.href = "dashboard.html";
-    } else {
-      msg.innerText = "❌ Invalid phone or password.";
+        if (foundUser) {
+          alert("Login successful!");
+          localStorage.setItem("loggedUser", JSON.stringify(foundUser));
+          window.location.href = "dashboard.html"; // ✅ redirect line fixed
+        } else {
+          alert("Invalid phone number or password.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error logging in. Please try again.");
+      }
     }
-  } catch (err) {
-    msg.innerText = "❌ Error: " + err.message;
-  }
-}
-</script>
+  </script>
 </body>
 </html>
