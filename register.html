@@ -1,68 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | WWEarnings</title>
+<meta charset="UTF-8">
+<title>Register</title>
 </head>
-<body style="font-family:sans-serif; background:#f5f5f5; padding:40px;">
-  <h2>Register</h2>
-  <label>Telegram Name:</label><br>
-  <input id="telegram" type="text" placeholder="Enter Telegram name"><br><br>
+<body>
+<h2>Register</h2>
+<input id="telegram" placeholder="Telegram name"><br>
+<input id="phone" placeholder="Phone"><br>
+<input id="password" placeholder="Password" type="password"><br>
+<button onclick="registerUser()">Register</button>
+<p id="msg"></p>
 
-  <label>Phone Number:</label><br>
-  <input id="phone" type="text" placeholder="Enter phone number"><br><br>
+<script>
+const API_URL = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
 
-  <label>Password:</label><br>
-  <input id="password" type="password" placeholder="Enter password"><br><br>
+async function registerUser() {
+  const telegram = document.getElementById("telegram").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  <button onclick="registerUser()">Register</button>
+  const body = {
+    usersDb4: { telegram, phone, password }
+  };
 
-  <p id="status" style="margin-top:20px;color:#333;"></p>
-
-  <script>
-  async function registerUser() {
-    const phone = document.getElementById("phone").value.trim();
-    const telegram = document.getElementById("telegram").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const status = document.getElementById("status");
-
-    if (!phone || !telegram || !password) {
-      status.textContent = "⚠️ Please fill in all fields.";
-      return;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById("msg").innerText = "✅ Registered successfully!";
+    } else {
+      document.getElementById("msg").innerText = "❌ Error: " + (data.errors?.[0]?.detail || "Unknown error");
     }
-
-    const url = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
-    const body = {
-      usersdb4: {   // ✅ lowercase
-        phone: phone,
-        telegram: telegram,
-        password: password
-      }
-    };
-
-    status.textContent = "⏳ Registering...";
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        status.textContent = "✅ Registration successful!";
-        setTimeout(() => window.location.href = "login.html", 1500);
-      } else {
-        console.error("Error:", data);
-        status.textContent = "❌ Error: " + (data.errors?.[0]?.detail || "Please try again.");
-      }
-    } catch (err) {
-      console.error("Network error:", err);
-      status.textContent = "❌ Network error. Try again.";
-    }
+  } catch (err) {
+    document.getElementById("msg").innerText = "❌ Failed: " + err.message;
   }
-  </script>
+}
+</script>
 </body>
 </html>
