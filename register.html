@@ -1,140 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - WWEarnings</title>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #111, #222);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+<script>
+async function registerUser() {
+  const phone = document.getElementById("phone").value.trim();
+  const telegram = document.getElementById("telegram").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!phone || !telegram || !password) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  const url = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
+
+  const body = {
+    usersDb4: {
+      phone: phone,
+      telegram: telegram,
+      password: password
     }
+  };
 
-    .register-box {
-      background: #1e1e1e;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-      width: 90%;
-      max-width: 380px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #0af;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      outline: none;
-      font-size: 15px;
-    }
-
-    input[type="text"], input[type="tel"], input[type="password"] {
-      background: #2a2a2a;
-      color: #fff;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: #0af;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-
-    button:hover {
-      background: #09c;
-    }
-
-    p {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    a {
-      color: #0af;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div class="register-box">
-    <h2>Register</h2>
-    <input type="text" id="telegram" placeholder="Telegram Name" required />
-    <input type="tel" id="phone" placeholder="Phone Number" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button id="registerBtn">Register</button>
-    <p>Already have an account? <a href="login.html">Login</a></p>
-    <p id="status" style="text-align:center; color:#f88;"></p>
-  </div>
-
-  <script>
-    const apiUrl = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
-    const btn = document.getElementById("registerBtn");
-    const status = document.getElementById("status");
-
-    btn.addEventListener("click", async () => {
-      const telegram = document.getElementById("telegram").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!telegram || !phone || !password) {
-        status.textContent = "Please fill in all fields.";
-        return;
-      }
-
-      status.textContent = "Registering...";
-
-      const body = {
-        usersDb4: {
-          telegram,
-          phone,
-          password
-        }
-      };
-
-      try {
-        const res = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error("HTTP " + res.status + ": " + errorText);
-        }
-
-        const data = await res.json();
-        console.log("Registered:", data);
-        status.style.color = "#0f0";
-        status.textContent = "Registration successful!";
-        setTimeout(() => (window.location.href = "login.html"), 1200);
-      } catch (err) {
-        console.error("Error registering:", err);
-        status.textContent = "Error registering, please try again.";
-      }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
     });
-  </script>
-</body>
-</html>
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Registration successful!");
+      window.location.href = "login.html";
+    } else {
+      console.error("Error:", data);
+      alert("Error registering: " + (data.errors?.[0]?.detail || "Please try again."));
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    alert("Network error, please try again later.");
+  }
+}
+</script>
