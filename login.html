@@ -1,90 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | WWEarnings</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2a5298, #1e3c72);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      width: 350px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    a { color: #b3e5fc; text-decoration: none; }
-    #msg { margin-top: 10px; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h2>Login</h2>
-    <input id="phone" type="text" placeholder="Phone number" />
-    <input id="password" type="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
-    <p>No account? <a href="register.html">Register</a></p>
-    <div id="msg"></div>
-  </div>
+<script>
+const API_URL = 'https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4';
 
-  <script>
-    const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
+async function loginUser() {
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const msg = document.getElementById('msg');
-      if (!phone || !password) {
-        msg.textContent = "Enter phone & password";
-        return;
-      }
-      msg.textContent = "Checking...";
-      try {
-        const res = await fetch(SHEETY_URL);
-        if (!res.ok) throw new Error('Sheety returned ' + res.status);
-        const data = await res.json();
-        const users = data.usersDb3 || [];
-        const user = users.find(u => u.phone === phone && u.password === password);
-        if (!user) {
-          msg.style.color = "#ffcdd2";
-          msg.textContent = "Invalid number or password";
-          return;
-        }
-        localStorage.setItem("loggedInPhone", phone);
-        msg.style.color = "#aefcae";
-        msg.textContent = "Login success!";
-        setTimeout(() => location.href = "dashboard.html", 1000);
-      } catch (err) {
-        msg.style.color = "#ffcdd2";
-        msg.textContent = "Error: " + err.message;
-      }
-    });
-  </script>
-</body>
-</html>
+  if (!phone || !password) {
+    alert("Please fill in both phone and password");
+    return;
+  }
+
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) {
+      throw new Error(`Sheety returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("Fetched data:", data);
+
+    const users = data.usersDb4 || [];
+    const found = users.find(
+      user => user.phone === phone && user.password === password
+    );
+
+    if (found) {
+      alert("Login successful!");
+      // You can redirect here later if you want:
+      // window.location.href = "dashboard.html";
+    } else {
+      alert("Invalid phone or password");
+    }
+
+  } catch (err) {
+    console.error("Error during login:", err);
+    alert("Login error. Please check console for details.");
+  }
+}
+</script>
