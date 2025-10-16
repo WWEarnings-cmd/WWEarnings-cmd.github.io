@@ -1,94 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | WWEarnings</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - WW Earnings</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
+      background: #f2f2f2;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 25px;
+    .container {
+      background: white;
+      padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      width: 350px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
     }
     input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       border-radius: 8px;
-      border: none;
+      border: 1px solid #ccc;
     }
     button {
       width: 100%;
       padding: 10px;
-      background: #4caf50;
+      background: #007bff;
       color: white;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
       cursor: pointer;
+      font-size: 16px;
     }
-    a { color: #b3e5fc; text-decoration: none; }
-    #msg { margin-top: 10px; font-size: 14px; }
+    button:hover {
+      background: #0056b3;
+    }
+    .link {
+      text-align: center;
+      margin-top: 10px;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="container">
     <h2>Register</h2>
-    <input id="phone" type="text" placeholder="Phone number" />
-    <input id="password" type="password" placeholder="Password" />
-    <button id="registerBtn">Register</button>
-    <p>Already have an account? <a href="login.html">Login</a></p>
-    <div id="msg"></div>
+    <input type="text" id="telegram" placeholder="Telegram username" required>
+    <input type="text" id="phone" placeholder="Phone number" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="registerUser()">Register</button>
+    <div class="link">
+      <a href="login.html">Already have an account? Login</a>
+    </div>
+    <p id="message"></p>
   </div>
 
   <script>
-    const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
+    const API_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
 
-    document.getElementById('registerBtn').addEventListener('click', async () => {
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const msg = document.getElementById('msg');
-      if (!phone || !password) {
-        msg.textContent = "Please fill both fields";
+    function registerUser() {
+      const telegram = document.getElementById("telegram").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
+      if (!telegram || !phone || !password) {
+        message.innerText = "Please fill all fields.";
+        message.style.color = "red";
         return;
       }
-      msg.textContent = "Registering...";
-      try {
-        const res = await fetch(SHEETY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            usersdb3: {  // ✅ lowercase version (this fixes the Bad Request)
-              phone,
-              password,
-              balance: 200
-            }
-          })
-        });
-        const text = await res.text();
-        if (!res.ok) {
-          msg.textContent = "Error: " + text;
-          return;
+
+      const body = {
+        usersdb3: {
+          telegram: telegram,
+          phone: phone,
+          password: password
         }
-        msg.style.color = "#aefcae";
-        msg.textContent = "Registered successfully! Redirecting...";
-        setTimeout(() => location.href = "login.html", 1000);
-      } catch (err) {
-        msg.textContent = "Network error: " + err.message;
-      }
-    });
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      })
+      .then(res => res.json())
+      .then(json => {
+        if (json.usersdb3) {
+          message.innerText = "Registration successful!";
+          message.style.color = "green";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1000);
+        } else {
+          message.innerText = "Error registering, please try again.";
+          message.style.color = "red";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        message.innerText = "Network error.";
+        message.style.color = "red";
+      });
+    }
   </script>
 </body>
 </html>
