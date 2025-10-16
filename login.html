@@ -5,36 +5,41 @@ async function loginUser() {
   const phone = document.getElementById("phone").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  document.body.innerHTML = "<h3>Checking login…</h3>";
+  document.body.innerHTML = "<h3>Step 1: Script started...</h3>";
 
   try {
-    const res = await fetch(API_URL);
-    const text = await res.text();
-    console.log("Raw response:", text);
+    document.body.innerHTML += "<p>Step 2: Fetching from Sheety...</p>";
 
-    if (!res.ok) {
-      document.body.innerHTML = `<p style='color:red;'>❌ Sheety returned ${res.status}</p>`;
+    const res = await fetch(API_URL);
+    document.body.innerHTML += `<p>Step 3: Got response (${res.status})</p>`;
+
+    const text = await res.text();
+    document.body.innerHTML += `<p>Step 4: Raw response length ${text.length}</p>`;
+
+    let data;
+    try {
+      data = JSON.parse(text);
+      document.body.innerHTML += `<p>Step 5: JSON parsed</p>`;
+    } catch (err) {
+      document.body.innerHTML += `<p style='color:red;'>❌ JSON parse error: ${err.message}</p><pre>${text}</pre>`;
       return;
     }
 
-    const data = JSON.parse(text);
-    console.log("Parsed JSON:", data);
+    console.log("Parsed:", data);
 
     const users = data.usersDb4 || [];
-    const found = users.find(
-      u => u.phone === phone && u.password === password
-    );
+    document.body.innerHTML += `<p>Step 6: Found ${users.length} users</p>`;
+
+    const found = users.find(u => u.phone === phone && u.password === password);
 
     if (found) {
-      document.body.innerHTML = `<h2>✅ Login Successful</h2>
-      <p>Welcome, ${found.telegram || found.phone}</p>`;
+      document.body.innerHTML = `<h2>✅ Login Successful</h2><p>Welcome, ${found.telegram || found.phone}</p>`;
     } else {
-      document.body.innerHTML = `<p style='color:red;'>Invalid phone or password</p>`;
+      document.body.innerHTML += `<p style='color:red;'>Invalid phone or password</p>`;
     }
 
   } catch (err) {
-    console.error("Error:", err);
-    document.body.innerHTML = `<p style='color:red;'>Error: ${err.message}</p>`;
+    document.body.innerHTML += `<p style='color:red;'>Fatal error: ${err.message}</p>`;
   }
 }
 </script>
