@@ -1,102 +1,174 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - WWEarnings</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Register — Debuggable</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0a3d62, #3c6382);
-      color: white;
-      text-align: center;
-      padding: 40px;
-    }
-    input {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 80%;
-      border: none;
-      border-radius: 6px;
-    }
-    button {
-      background-color: #38ada9;
-      color: white;
-      padding: 10px 25px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #079992;
-    }
-    p {
-      margin-top: 15px;
-    }
+    body{font-family:Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff}
+    .card{background:rgba(255,255,255,0.06);padding:20px;border-radius:10px;width:360px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+    input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none}
+    button{width:100%;padding:10px;border-radius:8px;border:0;background:#4caf50;color:#fff;font-weight:700;cursor:pointer}
+    .log{background:rgba(0,0,0,0.2);padding:10px;border-radius:6px;margin-top:10px;max-height:220px;overflow:auto;font-size:13px}
+    .hint{font-size:13px;color:#cfe8ff;margin-top:6px}
   </style>
 </head>
 <body>
-  <h2>Register to WWEarnings</h2>
+  <div class="card">
+    <h2 style="margin:0 0 10px 0">Register (debug)</h2>
 
-  <input type="text" id="telegram" placeholder="Enter Telegram name">
-  <input type="text" id="phone" placeholder="Enter phone number">
-  <input type="password" id="password" placeholder="Enter password">
-  <button onclick="registerUser()">Register</button>
+    <input id="telegram" placeholder="Telegram username (e.g. @you)">
+    <input id="phone" placeholder="Phone number">
+    <input id="password" type="password" placeholder="Password">
+    <button id="go">Register</button>
 
-  <p id="message"></p>
-  <p>Already have an account? <a href="login.html" style="color:#82ccdd;">Login here</a></p>
+    <div class="hint">This page will auto-detect how Sheety expects JSON and try variants. Open browser console (F12) for full responses.</div>
 
-  <script>
-    const API_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
+    <div class="log" id="log">Ready.</div>
+  </div>
 
-    function registerUser() {
-      const telegram = document.getElementById("telegram").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const message = document.getElementById("message");
+<script>
+const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
+const logEl = document.getElementById('log');
 
-      if (!telegram || !phone || !password) {
-        message.innerText = "Please fill all fields.";
-        message.style.color = "red";
-        return;
-      }
+function log(...args){
+  console.log(...args);
+  logEl.innerText += '\n' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ');
+  logEl.scrollTop = logEl.scrollHeight;
+}
 
-      const body = {
-        UsersDB3: {
-          telegram: telegram,
-          phone: phone,
-          password: password
-        }
-      };
+function showUser(msg, color){
+  log(msg);
+  logEl.style.color = color || '#fff';
+}
 
-      fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-      })
-      .then(res => res.json())
-      .then(json => {
-        if (json.UsersDB3) {
-          message.innerText = "Registration successful!";
-          message.style.color = "lightgreen";
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1000);
-        } else {
-          message.innerText = "Error registering, please try again.";
-          message.style.color = "red";
-          console.log(json);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        message.innerText = "Network error.";
-        message.style.color = "red";
-      });
+async function detectRootKey(){
+  showUser('Fetching Sheety GET to detect keys...');
+  try {
+    const r = await fetch(SHEETY_URL);
+    const text = await r.text();
+    let j;
+    try { j = JSON.parse(text); } catch(e) { j = null; }
+    log('GET status:', r.status);
+    log('GET response raw:', text);
+    if (!j) {
+      showUser('Could not parse GET response as JSON. See console.', '#ffcccc');
+      return { ok:false, reason:'parse_failed', raw:text, status:r.status };
     }
-  </script>
+    // find the first array property name
+    const arrKey = Object.keys(j).find(k => Array.isArray(j[k]));
+    showUser('Detected keys: ' + Object.keys(j).join(', '));
+    showUser('Detected array key (candidates): ' + (arrKey || '(none)'));
+    return { ok:true, json:j, arrKey: arrKey, status: r.status };
+  } catch (e){
+    log('GET error', e);
+    showUser('Network error when fetching Sheety GET: ' + e.message, '#ffcccc');
+    return { ok:false, reason:'network', error:e.message };
+  }
+}
+
+async function tryPostWithRoots(bodyObj, rootCandidates){
+  // tries POST with each root candidate, returns first success or final response
+  for (const root of rootCandidates){
+    const payload = {};
+    payload[root] = bodyObj;
+    try {
+      showUser('Trying POST with root: "'+root+'" ...');
+      const r = await fetch(SHEETY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const text = await r.text();
+      let parsed;
+      try { parsed = JSON.parse(text); } catch(e){ parsed = null; }
+      log('POST status for root ' + root + ':', r.status);
+      log('POST response raw for root ' + root + ':', text);
+      if (r.ok){
+        showUser('✅ POST succeeded with root: "'+root+'"', '#b6f7c6');
+        return { ok:true, root, status:r.status, raw:text, json:parsed };
+      } else {
+        // handle some known Sheety error shapes (quota, bad request)
+        let reason = parsed && parsed.errors ? parsed.errors : text;
+        showUser('✖ POST failed with root "'+root+'": status '+r.status+' — '+ JSON.stringify(reason));
+      }
+    } catch (e) {
+      log('POST network error for root', root, e);
+      showUser('Network error posting with root "'+root+'": ' + e.message, '#ffcccc');
+    }
+  }
+  return { ok:false, reason:'all_failed' };
+}
+
+document.getElementById('go').addEventListener('click', async () => {
+  logEl.innerText = '';
+  const telegram = document.getElementById('telegram').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const password = document.getElementById('password').value;
+  if (!telegram || !phone || !password) {
+    showUser('Please fill telegram, phone and password.', '#ffcccc');
+    return;
+  }
+
+  // 1) detect keys
+  const detected = await detectRootKey();
+  if (!detected.ok){
+    showUser('Cannot detect Sheety structure. Check network, Sheety URL, or quota. See console.');
+    return;
+  }
+
+  const arrKey = detected.arrKey || null; // e.g. "usersDb3" or "UsersDB3"
+  // Build likely root candidates:
+  const candidates = [];
+  if (arrKey) {
+    candidates.push(arrKey);                          // same as GET key
+    candidates.push(arrKey.toLowerCase());            // all-lowercase
+    candidates.push(arrKey.toUpperCase());            // all-upper
+    // also try singular/plural variants if it ends with 's' or 'S'
+    if (arrKey.endsWith('s') || arrKey.endsWith('S')) {
+      const singular = arrKey.slice(0,-1);
+      candidates.push(singular);
+      candidates.push(singular.toLowerCase());
+      candidates.push(singular.toUpperCase());
+    }
+    // also try common forms: usersdb3, UsersDB3
+    candidates.push('usersdb3');
+    candidates.push('UsersDB3');
+    candidates.push('UsersDB3'.toLowerCase());
+  } else {
+    // fallback common keys
+    candidates.push('usersdb3','usersDb3','UsersDb3','UsersDB3','users','user');
+  }
+  // dedupe
+  const uniqueCandidates = [...new Set(candidates)].filter(Boolean);
+
+  showUser('Will attempt POST with candidate roots: ' + uniqueCandidates.join(', '));
+
+  // Build the body object we want to send
+  const bodyObj = {
+    telegram, phone, password
+  };
+
+  // 2) try posting with candidates
+  const result = await tryPostWithRoots(bodyObj, uniqueCandidates);
+
+  if (result.ok) {
+    showUser('Registration successful using root: ' + result.root, '#b6f7c6');
+    // if Sheety returns a created object, show it
+    log('Creation result JSON:', result.json);
+    // redirect to login if created
+    setTimeout(()=> { window.location.href = 'login.html'; }, 900);
+    return;
+  }
+
+  // 3) All attempts failed — present helpful diagnostics
+  showUser('All POST attempts failed. See debug log above and the browser console for raw API responses.', '#ffcccc');
+
+  // Additional common checks
+  // - quota error contains "Monthly quota has been reached"
+  // - bad request contains "root property" text
+  // We already printed raw responses above for inspection.
+});
+</script>
 </body>
 </html>
