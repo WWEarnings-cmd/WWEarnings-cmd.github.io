@@ -3,70 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - WW Earnings</title>
+  <title>Register - WWEarnings</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 320px;
-    }
-    h2 {
+      background: linear-gradient(135deg, #0a3d62, #3c6382);
+      color: white;
       text-align: center;
-      color: #333;
+      padding: 40px;
     }
     input {
-      width: 100%;
+      display: block;
+      margin: 10px auto;
       padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      width: 80%;
+      border: none;
+      border-radius: 6px;
     }
     button {
-      width: 100%;
-      padding: 10px;
-      background: #007bff;
+      background-color: #38ada9;
       color: white;
+      padding: 10px 25px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 16px;
     }
     button:hover {
-      background: #0056b3;
+      background-color: #079992;
     }
-    .link {
-      text-align: center;
-      margin-top: 10px;
-    }
-    a {
-      color: #007bff;
-      text-decoration: none;
+    p {
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Register</h2>
-    <input type="text" id="telegram" placeholder="Telegram username" required>
-    <input type="text" id="phone" placeholder="Phone number" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button onclick="registerUser()">Register</button>
-    <div class="link">
-      <a href="login.html">Already have an account? Login</a>
-    </div>
-    <p id="message"></p>
-  </div>
+  <h2>Register to WWEarnings</h2>
+
+  <input type="text" id="telegram" placeholder="Enter Telegram name">
+  <input type="text" id="phone" placeholder="Enter phone number">
+  <input type="password" id="password" placeholder="Enter password">
+  <button onclick="registerUser()">Register</button>
+
+  <p id="message"></p>
+  <p>Already have an account? <a href="login.html" style="color:#82ccdd;">Login here</a></p>
 
   <script>
     const API_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
@@ -84,7 +63,7 @@
       }
 
       const body = {
-        usersdb3: {
+        UsersDB3: {
           telegram: telegram,
           phone: phone,
           password: password
@@ -100,15 +79,16 @@
       })
       .then(res => res.json())
       .then(json => {
-        if (json.usersdb3) {
+        if (json.UsersDB3) {
           message.innerText = "Registration successful!";
-          message.style.color = "green";
+          message.style.color = "lightgreen";
           setTimeout(() => {
             window.location.href = "login.html";
           }, 1000);
         } else {
           message.innerText = "Error registering, please try again.";
           message.style.color = "red";
+          console.log(json);
         }
       })
       .catch(err => {
