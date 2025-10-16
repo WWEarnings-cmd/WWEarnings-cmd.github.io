@@ -3,135 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | WWEarnings</title>
+  <title>WWEarnings Login</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(145deg, #e3f2fd, #bbdefb);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
-      overflow: hidden;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      padding: 35px;
+    .container {
+      background: white;
+      padding: 2rem;
       border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-      width: 360px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 350px;
       text-align: center;
-      animation: fadeIn 1s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    h2 {
-      margin-bottom: 20px;
-      letter-spacing: 1px;
     }
     input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      width: 90%;
+      padding: 0.7rem;
+      margin: 0.6rem 0;
+      border: 1px solid #ccc;
       border-radius: 10px;
-      border: none;
-      outline: none;
-      font-size: 15px;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, #2196f3, #21cbf3);
+      background: #1976d2;
       color: white;
       border: none;
+      padding: 0.7rem 2rem;
       border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
+      margin-top: 10px;
     }
     button:hover {
-      background: linear-gradient(90deg, #21cbf3, #2196f3);
-      transform: scale(1.02);
+      background: #1565c0;
     }
     a {
-      color: #b3e5fc;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    #msg {
+      display: block;
       margin-top: 15px;
-      font-size: 14px;
+      color: #1976d2;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Create Account</h2>
-    <input id="telegram" type="text" placeholder="Telegram username" />
-    <input id="phone" type="text" placeholder="Phone number" />
-    <input id="password" type="password" placeholder="Password" />
-    <button id="registerBtn">Register</button>
-    <p>Already have an account? <a href="login.html">Login</a></p>
-    <div id="msg"></div>
+  <div class="container">
+    <h2>Login to WWEarnings</h2>
+    <input type="text" id="phone" placeholder="Phone Number" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+    <a href="register.html">Don't have an account? Register</a>
   </div>
 
   <script>
-    const SHEETY_URL = "https://api.sheety.co/9b805411b5ecdb493c774c33fb4e5b61/usersDb3/usersDb3";
-
-    document.getElementById('registerBtn').addEventListener('click', async () => {
-      const telegram = document.getElementById('telegram').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const msg = document.getElementById('msg');
-
-      if (!telegram || !phone || !password) {
-        msg.textContent = "Please fill all fields";
-        msg.style.color = "#ffb3b3";
+    async function login() {
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!phone || !password) {
+        alert("Please fill in both fields.");
         return;
       }
 
-      msg.textContent = "Registering...";
-      msg.style.color = "#fff";
-
       try {
-        const res = await fetch(SHEETY_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            usersdb3: {
-              telegram,
-              phone,
-              password,
-              balance: 200
-            }
-          })
-        });
+        const res = await fetch("https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4");
+        const data = await res.json();
+        const users = data.usersDb4 || [];
+        const foundUser = users.find(
+          u => u.phone === phone && u.password === password
+        );
 
-        const text = await res.text();
-        if (!res.ok) {
-          msg.textContent = "Error: " + text;
-          msg.style.color = "#ffb3b3";
-          return;
+        if (foundUser) {
+          alert("Login successful!");
+          localStorage.setItem("loggedUser", JSON.stringify(foundUser));
+          window.location.href = "dashboard.html"; // ✅ redirect line fixed
+        } else {
+          alert("Invalid phone number or password.");
         }
-
-        msg.style.color = "#aefcae";
-        msg.textContent = "Registered successfully! Redirecting...";
-        setTimeout(() => location.href = "login.html", 1000);
-
       } catch (err) {
-        msg.textContent = "Network error: " + err.message;
-        msg.style.color = "#ffb3b3";
+        console.error(err);
+        alert("Error logging in. Please try again.");
       }
-    });
+    }
   </script>
 </body>
 </html>
