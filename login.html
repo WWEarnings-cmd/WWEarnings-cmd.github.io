@@ -5,36 +5,36 @@ async function loginUser() {
   const phone = document.getElementById("phone").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!phone || !password) {
-    alert("Please fill in both phone and password");
-    return;
-  }
+  document.body.innerHTML = "<h3>Checking login…</h3>";
 
   try {
     const res = await fetch(API_URL);
+    const text = await res.text();
+    console.log("Raw response:", text);
+
     if (!res.ok) {
-      throw new Error(`Sheety returned ${res.status}`);
+      document.body.innerHTML = `<p style='color:red;'>❌ Sheety returned ${res.status}</p>`;
+      return;
     }
 
-    const data = await res.json();
-    console.log("Fetched data:", data);
+    const data = JSON.parse(text);
+    console.log("Parsed JSON:", data);
 
     const users = data.usersDb4 || [];
     const found = users.find(
-      user => user.phone === phone && user.password === password
+      u => u.phone === phone && u.password === password
     );
 
     if (found) {
-      alert("Login successful!");
-      // You can redirect here later if you want:
-      // window.location.href = "dashboard.html";
+      document.body.innerHTML = `<h2>✅ Login Successful</h2>
+      <p>Welcome, ${found.telegram || found.phone}</p>`;
     } else {
-      alert("Invalid phone or password");
+      document.body.innerHTML = `<p style='color:red;'>Invalid phone or password</p>`;
     }
 
   } catch (err) {
-    console.error("Error during login:", err);
-    alert("Login error. Please check console for details.");
+    console.error("Error:", err);
+    document.body.innerHTML = `<p style='color:red;'>Error: ${err.message}</p>`;
   }
 }
 </script>
