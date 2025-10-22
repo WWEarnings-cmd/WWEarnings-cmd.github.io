@@ -3,91 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WWEarnings Login</title>
+  <title>Login | WWEarnings</title>
   <style>
     body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
       margin: 0;
     }
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 350px;
-      text-align: center;
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 350px;
     }
     input {
-      width: 90%;
-      padding: 0.7rem;
-      margin: 0.6rem 0;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
     }
     button {
-      background: #1976d2;
+      width: 100%;
+      padding: 10px;
+      background: #4caf50;
       color: white;
       border: none;
-      padding: 0.7rem 2rem;
-      border-radius: 10px;
+      border-radius: 8px;
+      font-weight: bold;
       cursor: pointer;
-      margin-top: 10px;
     }
-    button:hover {
-      background: #1565c0;
-    }
-    a {
-      display: block;
-      margin-top: 15px;
-      color: #1976d2;
-      text-decoration: none;
-    }
+    a { color: #b3e5fc; text-decoration: none; }
+    #msg { margin-top: 10px; font-size: 14px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Login to WWEarnings</h2>
-    <input type="text" id="phone" placeholder="Phone Number" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button onclick="login()">Login</button>
-    <a href="register.html">Don't have an account? Register</a>
+  <div class="card">
+    <h2>Login</h2>
+    <input id="phone" type="text" placeholder="Phone number" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <p>Don't have an account? <a href="register.html">Register</a></p>
+    <div id="msg"></div>
   </div>
 
   <script>
-    async function login() {
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value.trim();
+    const SHEETY_URL = "https://api.sheety.co/b9c1c7be9c0f80b5d6f71b621fb1d4c9/usersDb5/usersDb5";
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('msg');
+      msg.textContent = "Checking...";
+      msg.style.color = "white";
+
       if (!phone || !password) {
-        alert("Please fill in both fields.");
+        msg.textContent = "Please fill both fields";
         return;
       }
 
       try {
-        const res = await fetch("https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4");
+        const res = await fetch(SHEETY_URL);
         const data = await res.json();
-        const users = data.usersDb4 || [];
-        const foundUser = users.find(
-          u => u.phone === phone && u.password === password
-        );
 
-        if (foundUser) {
-          alert("Login successful!");
-          localStorage.setItem("loggedUser", JSON.stringify(foundUser));
-          window.location.href = "dashboard.html"; // ✅ redirect line fixed
+        const users = data.usersDb5 || data.usersdb5 || [];
+        const user = users.find(u => u.phone === phone && u.password === password);
+
+        if (user) {
+          msg.style.color = "#aefcae";
+          msg.textContent = "Login successful! Redirecting...";
+          localStorage.setItem("loggedInUser", JSON.stringify(user));
+          setTimeout(() => location.href = "dashboard.html", 1000);
         } else {
-          alert("Invalid phone number or password.");
+          msg.style.color = "red";
+          msg.textContent = "Invalid phone number or password";
         }
       } catch (err) {
-        console.error(err);
-        alert("Error logging in. Please try again.");
+        msg.style.color = "orange";
+        msg.textContent = "Network error: " + err.message;
       }
-    }
+    });
   </script>
 </body>
 </html>
