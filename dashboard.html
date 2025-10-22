@@ -82,27 +82,23 @@
       font-weight: 500;
     }
 
-    /* Animation for “points added successfully” */
-    .success-message {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #4caf50;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      opacity: 0;
-      font-weight: bold;
-      animation: popUp 1.2s ease forwards;
-      z-index: 9999;
+    /* History section */
+    .history {
+      background: white;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    @keyframes popUp {
-      0% { opacity: 0; transform: translate(-50%, -60%) scale(0.8); }
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-      80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+    .history h3 {
+      color: #007bff;
+      margin-top: 0;
+    }
+    .log-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
@@ -146,6 +142,12 @@
     </div>
   </div>
 
+  <!-- 🟢 Earning history section -->
+  <div class="history">
+    <h3>Earning History</h3>
+    <div id="historyLog"></div>
+  </div>
+
   <footer>
     <a href="#">Home</a>
     <a href="#">Promotion</a>
@@ -179,16 +181,16 @@
     }
     loadUser();
 
-    // 🟢 Handle the “Automatic WhatsApp Task”
+    // 🟢 Add earning history messages
+    const historyLog = document.getElementById("historyLog");
     document.getElementById("startTaskBtn").addEventListener("click", () => {
       for (let i = 0; i < 8; i++) {
         setTimeout(() => {
-          const msg = document.createElement("div");
-          msg.className = "success-message";
-          msg.textContent = `✅ Points added successfully! +360 points`;
-          document.body.appendChild(msg);
-          setTimeout(() => msg.remove(), 1200);
-        }, i * 500);
+          const log = document.createElement("div");
+          log.className = "log-item";
+          log.textContent = `✅ 360 points added successfully`;
+          historyLog.prepend(log);
+        }, i * 400);
       }
     });
   </script>
