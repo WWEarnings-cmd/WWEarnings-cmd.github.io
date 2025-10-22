@@ -46,49 +46,50 @@
 <body>
   <div class="card">
     <h2>Register</h2>
+    <input id="telegram" type="text" placeholder="Telegram name" />
     <input id="phone" type="text" placeholder="Phone number" />
     <input id="password" type="password" placeholder="Password" />
-    <input id="telegram" type="text" placeholder="Telegram username" />
     <button id="registerBtn">Register</button>
     <p>Already have an account? <a href="login.html">Login</a></p>
     <div id="msg"></div>
   </div>
 
   <script>
-    const SHEETY_URL = "https://api.sheety.co/f7f2e9490f85889b2a23cbdcf031c17e/usersDb4/usersDb4";
+    const SHEETY_URL = "https://api.sheety.co/b9c1c7be9c0f80b5d6f71b621fb1d4c9/usersDb5/usersDb5";
 
     document.getElementById('registerBtn').addEventListener('click', async () => {
+      const telegram = document.getElementById('telegram').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value.trim();
-      const telegram = document.getElementById('telegram').value.trim();
       const msg = document.getElementById('msg');
 
-      if (!phone || !password || !telegram) {
+      if (!telegram || !phone || !password) {
         msg.textContent = "Please fill all fields";
         return;
       }
 
       msg.textContent = "Registering...";
-
       try {
         const res = await fetch(SHEETY_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            usersdb4: { phone, password, telegram, balance: 200 }
+            usersdb5: {  // ✅ lowercase root key for Sheety
+              telegram,
+              phone,
+              password,
+              balance: 200
+            }
           })
         });
-
         const text = await res.text();
         if (!res.ok) {
           msg.textContent = "Error: " + text;
           return;
         }
-
         msg.style.color = "#aefcae";
         msg.textContent = "Registered successfully! Redirecting...";
         setTimeout(() => location.href = "login.html", 1000);
-
       } catch (err) {
         msg.textContent = "Network error: " + err.message;
       }
