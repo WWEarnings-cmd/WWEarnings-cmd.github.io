@@ -79,99 +79,54 @@
       font-weight: 500;
       cursor: pointer;
     }
-
-    .history {
-      background: white;
-      margin: 15px;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .history h3 {
-      color: #007bff;
-      margin-top: 0;
-    }
-    .log-item {
-      padding: 6px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-      color: #333;
-    }
-
-    /* Hide the account page by default */
-    #accountPage {
-      display: none;
-      padding-bottom: 70px;
-    }
   </style>
 </head>
 <body>
 
   <header>WWEarnings Dashboard</header>
 
-  <!-- DASHBOARD PAGE -->
-  <div id="dashboardPage">
-    <div class="balance-section">
-      <div class="balance-item">
-        <h3 id="balance">0</h3>
-        <p>Account Balance</p>
-      </div>
-      <div class="balance-item">
-        <h3 id="todayEarnings">0</h3>
-        <p>Today's Earnings</p>
-      </div>
-      <div class="balance-item">
-        <h3 id="promoIncome">0</h3>
-        <p>Promotion Income</p>
-      </div>
+  <div class="balance-section">
+    <div class="balance-item">
+      <h3 id="balance">0</h3>
+      <p>Account Balance</p>
     </div>
-
-    <div class="promo-banner">
-      <h2>Welcome to WWEarnings!</h2>
-      <p>Turn your WhatsApp into a daily earning stream. 100% free to start — safe and legal.</p>
+    <div class="balance-item">
+      <h3 id="todayEarnings">0</h3>
+      <p>Today's Earnings</p>
     </div>
-
-    <div class="tasks">
-      <h3>Recommended Tasks</h3>
-      <div class="task-card">
-        <div><strong>Automatic WhatsApp Task</strong><p>Earn 250 points per hour</p></div>
-        <button id="startTaskBtn">Start Task</button>
-      </div>
-      <div class="task-card">
-        <div><strong>Invite a Friend</strong><p>Earn 200 points per referral</p></div>
-        <button>Invite</button>
-      </div>
-      <div class="task-card">
-        <div><strong>Check-in Bonus</strong><p>Sign in daily for rewards</p></div>
-        <button>Sign In</button>
-      </div>
-    </div>
-
-    <div class="history">
-      <h3>Earning History</h3>
-      <div id="historyLog"></div>
+    <div class="balance-item">
+      <h3 id="promoIncome">0</h3>
+      <p>Promotion Income</p>
     </div>
   </div>
 
-  <!-- ACCOUNT PAGE -->
-  <div id="accountPage">
-    <div class="history">
-      <h3>Withdrawal History</h3>
-      <div id="withdrawLog">
-        <div class="log-item">💸 Withdrawn 8000 points successfully</div>
-        <div class="log-item">💸 Withdrawn 4670 points successfully</div>
-        <div class="log-item">💸 Withdrawn 12310 points successfully</div>
-        <div class="log-item">💸 Withdrawn 7600 points successfully</div>
-      </div>
+  <div class="promo-banner">
+    <h2>Welcome to WWEarnings!</h2>
+    <p>Turn your WhatsApp into a daily earning stream. 100% free to start — safe and legal.</p>
+  </div>
+
+  <div class="tasks">
+    <h3>Recommended Tasks</h3>
+    <div class="task-card">
+      <div><strong>Automatic WhatsApp Task</strong><p>Earn 250 points per hour</p></div>
+      <button>Start Task</button>
+    </div>
+    <div class="task-card">
+      <div><strong>Invite a Friend</strong><p>Earn 200 points per referral</p></div>
+      <button>Invite</button>
+    </div>
+    <div class="task-card">
+      <div><strong>Check-in Bonus</strong><p>Sign in daily for rewards</p></div>
+      <button>Sign In</button>
     </div>
   </div>
 
   <footer>
-    <a id="homeTab">Home</a>
-    <a>Promotion</a>
-    <a>Tasks</a>
-    <a>Service</a>
-    <a id="accountTab">Account</a>
+    <a href="#">Home</a>
+    <a href="#">Promotion</a>
+    <a href="#">Tasks</a>
+    <a href="#">Service</a>
+    <a href="#">Account</a>
   </footer>
 
   <script>
@@ -197,33 +152,7 @@
       }
     }
     loadUser();
-
-    const historyLog = document.getElementById("historyLog");
-    document.getElementById("startTaskBtn").addEventListener("click", () => {
-      for (let i = 0; i < 8; i++) {
-        setTimeout(() => {
-          const log = document.createElement("div");
-          log.className = "log-item";
-          log.textContent = `✅ 360 points added successfully`;
-          historyLog.prepend(log);
-        }, i * 400);
-      }
-    });
-
-    // Tab switch logic
-    const dashboardPage = document.getElementById("dashboardPage");
-    const accountPage = document.getElementById("accountPage");
-    const homeTab = document.getElementById("homeTab");
-    const accountTab = document.getElementById("accountTab");
-
-    homeTab.addEventListener("click", () => {
-      dashboardPage.style.display = "block";
-      accountPage.style.display = "none";
-    });
-    accountTab.addEventListener("click", () => {
-      dashboardPage.style.display = "none";
-      accountPage.style.display = "block";
-    });
   </script>
+
 </body>
 </html>
