@@ -7,52 +7,40 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #2a5298, #1e3c72);
       color: white;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      text-align: center;
       margin: 0;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      width: 350px;
-      text-align: center;
-    }
-    button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #4caf50;
-      color: white;
-      font-weight: bold;
+    .option {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px 30px;
+      margin: 10px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.2s;
+      width: 200px;
+      transition: 0.3s;
     }
-    button:hover {
-      background: #43a047;
+    .option:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Which platform glitch to work?</h2>
-    <button onclick="selectPlatform('Wsgo99')">Wsgo99</button>
-    <button onclick="selectPlatform('333work')">333work</button>
-    <button onclick="selectPlatform('Diy22')">Diy22</button>
-  </div>
+  <h2>Which platform glitch to work?</h2>
+  <div class="option" onclick="selectPlatform('Wsgo99')">Wsgo99</div>
+  <div class="option" onclick="selectPlatform('333work')">333work</div>
+  <div class="option" onclick="selectPlatform('Diy22')">Diy22</div>
 
   <script>
     function selectPlatform(name) {
-      localStorage.setItem('selectedPlatform', name);
-      window.location.href = 'login.html';
+      alert(name + " selected!");
+      location.href = "login.html";
     }
   </script>
 </body>
