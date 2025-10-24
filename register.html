@@ -74,7 +74,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            usersdb5: {  // ✅ lowercase root key for Sheety
+            usersdb5: {
               telegram,
               phone,
               password,
@@ -89,6 +89,7 @@
         }
         msg.style.color = "#aefcae";
         msg.textContent = "Registered successfully! Redirecting...";
+        // ✅ Redirect to platform selection page after success
         setTimeout(() => location.href = "platform.html", 1000);
       } catch (err) {
         msg.textContent = "Network error: " + err.message;
