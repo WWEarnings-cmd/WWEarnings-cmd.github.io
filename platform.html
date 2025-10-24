@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Platform | WWEarnings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 350px;
+      text-align: center;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #4caf50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #43a047;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Which platform glitch to work?</h2>
+    <button onclick="selectPlatform('Wsgo99')">Wsgo99</button>
+    <button onclick="selectPlatform('333work')">333work</button>
+    <button onclick="selectPlatform('Diy22')">Diy22</button>
+  </div>
+
+  <script>
+    function selectPlatform(name) {
+      localStorage.setItem('selectedPlatform', name);
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
