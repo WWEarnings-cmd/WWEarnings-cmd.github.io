@@ -89,8 +89,7 @@
         }
         msg.style.color = "#aefcae";
         msg.textContent = "Registered successfully! Redirecting...";
-        // ✅ Redirect to platform selection page after success
-        setTimeout(() => location.href = "platform.html", 1000);
+        setTimeout(() => location.href = "login.html", 1000);
       } catch (err) {
         msg.textContent = "Network error: " + err.message;
       }
